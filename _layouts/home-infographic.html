@@ -1,30 +1,84 @@
 ---
-# Default home page with boxes providing collection stats
+# Home page for the SMPM dictionary (replaces the demo "boxes" layout)
 layout: page
 ---
+{%- assign entries = site.data[site.metadata] | where_exp: 'item','item.objectid' -%}
+{%- assign audio_entries = entries | where: 'display_template', 'audio' -%}
+
 <div class="row">
 
   <div class="col-md-8">
 
-    {% include index/description.html %}
-    {% include index/carousel.html title="Sample Items" %}
-    
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title h5">Welcome</h2>
+        <p class="card-text">
+          This is a dictionary of <strong>San Martín Peras Mixtec</strong> (<em>Tu'un Savi</em>),
+          an Indigenous language spoken in San Martín Peras, Oaxaca, Mexico.
+          Each entry gives the headword with tone marking, its IPA transcription, English and Spanish glosses,
+          and, where available, a recording of a native speaker.
+        </p>
+        <p class="card-text">
+          Search for a word in Mixtec, English, or Spanish, or browse by meaning.
+        </p>
+
+        <!-- Search box: sends the visitor to the Browse page with the search already applied -->
+        <form id="homeSearch" class="input-group mb-2" role="search" aria-label="Search the dictionary">
+          <input type="search" id="homeSearchBox" class="form-control form-control-lg"
+                 placeholder="Search the dictionary…" aria-label="Search the dictionary">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ '/browse.html' | relative_url }}">Browse all entries &raquo;</a>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ '/subjects.html' | relative_url }}">Browse by semantic domain &raquo;</a>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title h5">How to use the dictionary</h2>
+        <ul class="mb-0">
+          <li>Click the <strong>play button</strong> next to a word to hear it.</li>
+          <li>Click anywhere else on a row to open the full entry (IPA, glosses, speaker, notes).</li>
+          <li>On the Browse page you can filter by speaker and sort alphabetically.</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
-  <div class="col-md-4">  
 
-    {% include index/time.html %}
+  <div class="col-md-4">
 
-    {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="primary" %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title h5">The dictionary so far</h2>
+        <p class="card-text">
+          <span class="h4">{{ entries | size }}</span> entries<br>
+          <span class="h4">{{ audio_entries | size }}</span> with audio recordings
+        </p>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ '/browse.html#display_template:audio' | relative_url }}">Entries with audio</a>
+      </div>
+    </div>
 
-    {% include index/featured-terms.html field="location" title="Locations" btn-color="outline-secondary" %}
-    
-    {% include index/content.html %}
+    {% include index/featured-terms.html field="semantic_domain" title="Semantic domains" btn-color="primary" max=10 %}
 
-  </div>
-  <div class="col-md-12">
-
-    {% include index/data-download.html %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title h5">About</h2>
+        <p class="card-text"><small>Compiled by Andrew Hedding, University of Washington and Ben Eischens, University of California, Los Angeles, with Jorge Curiel, Roselia Durán Cruz Natalia Gracida Cruz, and Juan Gracida Ortiz. Research assistance by Maritza Sugey Barragan Orozco, Aether Brown, Neeraj Bhogavilli, Helena
+Kaikkonen, Asa Kole, Abigail Nussbaum, Elliot Okimoto, Hannah Pierce, Amaya Saunders, Joshua Yoon, and Isabella Zarra.</small></p>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ '/about.html' | relative_url }}">About the project &raquo;</a>
+      </div>
+    </div>
 
   </div>
 
 </div>
+
+<script>
+  document.getElementById('homeSearch').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var q = document.getElementById('homeSearchBox').value.trim();
+    var base = {{ '/browse.html' | relative_url | jsonify }};
+    window.location.href = q ? base + '#' + encodeURIComponent(q) : base;
+  });
+</script>
