@@ -56,23 +56,29 @@ var loadingIcon, filterTextBox, browseItemsDiv;
 function makeCard(obj) {
     const placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E";
     const itemHref = `{{ '/items/' | relative_url }}${ obj.parent ? obj.parent + ".html#" + obj.id : obj.id + ".html"}`;
-    
+
     let card = '<div class="item col-lg-4 col-md-6 mb-2"><div class="card">';
-    
+
     // Image or icon
     if(obj.img) {
         card += `<a href="${itemHref}"><img class="card-img-top lazyload" src="${placeholder}" data-src="${obj.img}" alt="${obj.alt || obj.title}"></a>`;
     }
-    
-    // Title
-    card += `<div class="card-body text-center"><h3 class="card-title h4"><a href="${itemHref}" class="text-dark">${obj.title}</a></h3>`;
-    
+
+    // Small play button, only for entries that have a local audio file
+    let audioBtn = '';
+    if(obj.display_template === 'audio' && obj.object_location) {
+        audioBtn = `<button type="button" class="btn btn-sm btn-outline-primary play-audio-btn" data-audio="${obj.object_location}" aria-label="Play pronunciation of ${obj.title}" title="Play pronunciation" onclick="event.preventDefault(); event.stopPropagation(); playAudioPreview(this);">${CB_PLAY_ICON}</button>`;
+    }
+
+    // Title -- "stretched-link" makes the whole card a click target (see CSS), not just this text
+    card += `<div class="card-body text-center"><h3 class="card-title h4"><a href="${itemHref}" class="text-dark stretched-link">${obj.title}</a></h3>${audioBtn}`;
+
     // Icon for items without images
     if(!obj.img) {
         const thumbIcon = getIcon(obj.display_template, obj.format, "thumb");
         if(thumbIcon) card += `<p><a href="${itemHref}">${thumbIcon}</a></p>`;
     }
-    
+
     // Field data
     card += '<p class="card-text">';
     {% for f in fields %}{% unless f.hidden == 'true' %}
@@ -92,15 +98,46 @@ function makeCard(obj) {
     }
     {% endunless %}{% endfor %}
     card += '</p>';
-    
+
     // Media type badge
     if(obj.display_template) {
         const mediaIcon = getIcon(obj.display_template, obj.format, "hidden");
         card += `<p class="card-text"><small><a class="btn btn-sm btn-outline-secondary" href="{{ page.url | relative_url }}#display_template:${encodeURIComponent(obj.display_template)}">${obj.display_template.toUpperCase().replace("_"," ")} ${mediaIcon}</a></small></p>`;
     }
-    
+
     card += `<hr><a href="${itemHref}" class="btn btn-sm btn-light" title="link to ${obj.title}">View Full Record</a></div></div></div>`;
     return card;
+}
+
+// ---------------------------------------------------------------------------
+// Play button for the browse rows: plays the recording without leaving the page.
+// Click again to stop. Starting another recording stops the previous one.
+// ---------------------------------------------------------------------------
+const CB_PLAY_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/></svg>';
+const CB_STOP_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/></svg>';
+let cbPreviewAudio = null;
+let cbPreviewBtn = null;
+
+function cbStopPreview() {
+    if (cbPreviewAudio) { cbPreviewAudio.pause(); cbPreviewAudio = null; }
+    if (cbPreviewBtn) { cbPreviewBtn.innerHTML = CB_PLAY_ICON; cbPreviewBtn.classList.remove('active'); cbPreviewBtn = null; }
+}
+
+function playAudioPreview(btn) {
+    const src = btn.getAttribute('data-audio');
+    if (!src) return;
+    const wasThisButton = (cbPreviewBtn === btn);
+    cbStopPreview();
+    if (wasThisButton) return; // second click on the same button just stops it
+
+    const audio = new Audio(src);
+    cbPreviewAudio = audio;
+    cbPreviewBtn = btn;
+    btn.innerHTML = CB_STOP_ICON;
+    btn.classList.add('active');
+    audio.addEventListener('ended', () => { if (cbPreviewAudio === audio) cbStopPreview(); });
+    audio.addEventListener('error', () => { if (cbPreviewAudio === audio) cbStopPreview(); });
+    audio.play().catch(() => { if (cbPreviewAudio === audio) cbStopPreview(); });
 }
 
 // =============================================================================
