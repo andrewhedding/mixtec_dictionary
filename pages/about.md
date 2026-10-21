@@ -2,38 +2,46 @@
 title: About
 layout: about
 permalink: /about.html
-# include CollectionBuilder info at bottom
-credits: true
-# featured-image value can be one objectid for a photo object in this collection, a relative path to an image in this project, or a full url to any image. If left blank, no featured image will appear at top of About page.
-about-featured-image: demo_031
-# set background-position for featured image, "center", "top", "bottom"
-position: bottom
-# major heading to display over featured image
-heading: About the Collection
-# paragraph text below heading in featured image
-sub-heading: 
-# additional padding added to the feature to increase size. Give value in em or px, e.g. "5em".
+credits: false
+about-featured-image: /assets/img/sanmartinperas.jpg
+position: center
+heading: About the Dictionary
+sub-heading: San Martín Peras Mixtec (Tu'un Savi)
 padding: 6em
-# Edit the markdown on in this file to describe your collection
-# Look in _includes/feature for options to easily add features to the page
 ---
 
-## About CollectionBuilder CSV
+## The dictionary
 
-This demo collection features items from the University of Idaho Library's [Digital Collections](https://www.lib.uidaho.edu/digital/), and is build using [CollectionBuilder-CSV](https://github.com/CollectionBuilder/collectionbuilder-csv).
+This is a searchable, sound-linked dictionary of San Martín Peras Mixtec (SMPM), an Indigenous language of Oaxaca, Mexico.
+Each entry gives the word in the practical orthography with tone marking, an IPA transcription, glosses in English and Spanish, its part of speech and semantic domain, and, where available, a recording by a native speaker.
+The dictionary is a work in progress: entries and recordings are added regularly, and some entries do not yet have a recording.
 
-CollectionBuilder-CSV is a "Stand Alone" template for creating digital collection and exhibit websites using Jekyll, given:
 
-- a CSV of collection metadata
-- a folder of images, PDFs, audio, or video files
+## Speakers
 
-Driven by your collection metadata, the template generates engaging visualizations to browse and explore your objects.
-The resulting static site can be hosted on any basic web server.
+The recordings are by native speakers of San Martín Peras Mixtec, identified in each entry by their initials: NGC, JGO, LA, RDC and JC.
+We are grateful to them and to the San Martín Peras community for sharing their language.
 
-[CollectionBuilder](https://github.com/CollectionBuilder/) is an set of open source tools for creating digital collection and exhibit websites that are driven by metadata and powered by modern static web technology.
-See [CB Docs](https://collectionbuilder.github.io/cb-docs/) for detailed information.
+<!-- ADD: full names or acknowledgments if the speakers want to be named. -->
 
-{% include feature/image.html objectid="demo_001" width="75" %} 
+## Credits and funding
 
-<!-- IMPORTANT!!! DELETE this comment and the include below when you are finished editing this page for your collection. The include below introduces about page features. They will show up on your collection's about page until you delete it.  -->
-{% include cb/about_the_about.md %} 
+The Tu'un Savi Dictionary project is led by Andrew Hedding (University of Washington) and Ben Eischens (University of California, Los Angeles). This work has been supported by a Digital Humanities Summer Fellowship from the Simpson Center for the Humanities at the University of Washington.
+
+<!-- CHECK: add other collaborators, funders and community partners here. -->
+
+## How to cite
+
+To cite the dictionary as a whole:
+
+> Hedding, Andrew and Ben Eischens. 2026. *San Martín Peras Mixtec Dictionary (Tu'un Savi)*. University of Washington and University of California, Los Angeles. https://andrewhedding.github.io/mixtec_dictionary/
+
+To cite a single entry, use the citation at the bottom of that entry's page.
+
+## Corrections and contact
+
+If you spot an error or want to suggest a word, please email ahedding@uw.edu
+
+## Built with
+
+The site is built with [CollectionBuilder-CSV](https://github.com/CollectionBuilder/collectionbuilder-csv), an open-source tool for digital collections.

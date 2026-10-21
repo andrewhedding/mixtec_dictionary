@@ -1,14 +1,19 @@
 {% comment %}
 
-    Adds a basic citation box for the item with reference link to the item page.
+    Dictionary citation box for entry pages.
+    Author comes from "citation-author" in _config.yml (falls back to "author").
 
 {%- endcomment -%}
+{%- assign cite_author = site.citation-author | default: site.author -%}
+{%- assign cite_head = page.orthography_tone | default: page.orthography -%}
 <div class="card">
-    <div class="card-header">Attribution</div>
+    <div class="card-header">How to cite this entry</div>
     <div class="card-body">
-        <dl>
-            <dt>Citation:</dt>
-            <dd>"{{ page.title }}", {{ site.title }}, {% if site.organization-name %}{{ site.organization-name }}, {% endif %}<a href="{{ page.url | absolute_url }}">{{ page.url | absolute_url }}</a></dd>
-        </dl>
+        <p class="card-text mb-0">
+            {{ cite_author }}. {{ site.time | date: "%Y" }}.
+            {% if cite_head %}“{{ cite_head }}” ‘{{ page.title }}’.{% else %}“{{ page.title }}”.{% endif %}
+            In <em>{{ site.title }}</em>{% if site.organization-name %}. {{ site.organization-name }}{% endif %}.
+            <a href="{{ page.url | absolute_url }}">{{ page.url | absolute_url }}</a>
+        </p>
     </div>
 </div>

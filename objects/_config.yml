@@ -27,7 +27,7 @@ description: "A searchable, sound-linked dictionary of San Martín Peras Mixtec,
 # keywords, a short list of subjects describing the collection, separated by semicolon, to appear in rich markup
 keywords: Mixtec; Mixtecan languages; Oaxaca; Mexico; linguistics; Indigenous languages; dictionary
 # creator of the digital collection, to appear in meta tags; we typically use our GitHub usernames but feel free to just use your name
-author: Andrew Hedding
+author: Andrew Hedding and Ben Eischens
 
 ##########
 # COLLECTION SETTINGS
@@ -50,11 +50,12 @@ metadata: dictionary
 #
 # Enter name and link for your organization (replacing the name and links below)
 # These values will be used in attribution and data
-organization-name: "San Martín Peras Mixtec Dictionary Project"
+organization-name: "Tu'un Savi Dictionary Project"
 organization-link: https://andrewhedding.github.io/mixtec-dictionary
 # Add logo image links if you would like them to appear in banner and footer. Delete or leave blank to remove logos.
 organization-logo-banner:
 organization-logo-nav:
+citation-author: "Hedding, Andrew and Ben Eischens"
 
 ##########
 # ROBOTS EXCLUDE

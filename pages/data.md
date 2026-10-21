@@ -4,8 +4,7 @@ layout: data
 permalink: /data.html
 ---
 
-## Collection Metadata
+## Dictionary table
 
-The table below provides sorting and basic search of the collection contents. 
-Use the "CSV" button below to download the filtered metadata you see on the page. 
-Alternatively, click the "Download" button at the top right to view the full collection metadata in various formats. 
+The table below lists every entry and can be sorted and searched.
+Use the "CSV" button to download the entries you see on the page, or the "Download" button at the top right to get the whole dictionary in other formats.

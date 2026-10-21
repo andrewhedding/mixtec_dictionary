@@ -1,5 +1,7 @@
 field,display_name
-title,Title
-date,Date
-description,Description
-subject,Subjects
+title,English
+orthography_tone,Headword
+ipa,IPA
+part_of_speech,Part of Speech
+semantic_domain,Semantic Domain
+spanish,Spanish
