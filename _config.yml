@@ -10,9 +10,9 @@
 # site domain, full URL to the production location of your collection
 url: https://andrewhedding.github.io
 # path to location on the domain if necessary e.g. /digital/hjccc
-baseurl: /mixtec-dictionary
+baseurl: /mixtec_dictionary
 # location of code, the full url to your github repository
-source-code: https://github.com/andrewhedding/mixtec-dictionary
+source-code: https://github.com/andrewhedding/mixtec_dictionary
 
 ##########
 # SITE SETTINGS
