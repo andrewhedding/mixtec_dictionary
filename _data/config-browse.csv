@@ -1,6 +1,8 @@
 field,display_name,btn,hidden,sort_name,facet_name
 orthography_tone,Headword,,,Headword,
 orthography,Spelling without tone,,true,,
+comp_ortho_tone,Completive,,true,,
+pot_ortho_tone,Potential,,true,,
 ipa,IPA,,true,,
 part_of_speech,Part of Speech,,true,,Part of Speech
 semantic_domain,Semantic Domain,,true,,Semantic Domain

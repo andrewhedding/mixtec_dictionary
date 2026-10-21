@@ -127,3 +127,36 @@
     .card-body { gap: 0.4rem; padding: 0.5rem 0.75rem; }
   }
 }
+
+
+/* ---- Entry page ---- */
+.entry-headword { font-size: 2.6rem; font-weight: 600; margin-bottom: 0.1rem; color: #1a4d8f; }
+.entry-gloss { font-size: 1.3rem; color: #444; margin-bottom: 1.25rem; }
+.entry-ipa { margin-left: 0.9rem; color: #777; font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Segoe UI", serif; }
+
+#item-metadata dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem 1.75rem; margin: 0; }
+#item-metadata dt { margin: 0; font-weight: 600; color: #555; }
+#item-metadata dd { margin: 0; }
+@media (max-width: 576px) {
+  .entry-headword { font-size: 2.1rem; }
+  #item-metadata dl { grid-template-columns: 1fr; gap: 0; }
+  #item-metadata dd { margin-bottom: 0.7rem; }
+}
+
+/* ---- Verb forms table (entry page) ---- */
+.forms-card .form-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr minmax(220px, 1.2fr);
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-top: 1px solid #e3e6ea;
+}
+.forms-card .form-row:first-of-type { border-top: 0; }
+.forms-card .form-aspect { font-weight: 600; color: #555; }
+.forms-card .form-headword { font-size: 1.35rem; font-weight: 500; color: #1a4d8f; }
+.forms-card .form-meta { font-size: 0.85rem; color: #777; margin-left: 0.6rem; }
+.forms-card .form-meta:is(div) { margin-left: 0; }
+@media (max-width: 576px) {
+  .forms-card .form-row { grid-template-columns: 1fr; }
+}

@@ -1,11 +1,11 @@
 field,display_name,browse_link,external_link,dc_map,schema_map
-title,English,,,DCTERMS.title,headline
-orthography_tone,Headword (Mixtec),,,,
-orthography,Orthography (no tone),,,,
-ipa,IPA Transcription,,,,
+title,,,,DCTERMS.title,headline
+orthography_tone,,,,,
+orthography,,,,,
+ipa,,,,,
 part_of_speech,Part of Speech,true,,,
 semantic_domain,Semantic Domain,true,,,
 spanish,Spanish,,,,
 speaker,Speaker,true,,,
 notes,Notes,,,,
-format,Format,,,,encodingFormat
+format,,,,,encodingFormat

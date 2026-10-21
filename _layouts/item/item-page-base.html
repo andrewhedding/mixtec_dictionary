@@ -1,43 +1,93 @@
 ---
-# base layout for other item display_template layouts
-# adds breadcrumbs and title at top; citation box, rights box, and browse buttons at bottom
+# Dictionary-style entry page. Used by every entry (with or without audio).
 layout: default
-# item-meta adds rich meta markup to the page on production build
 item-meta: true
 ---
+{%- assign headword = page.orthography_tone | default: page.orthography -%}
 <div class="container py-3">
 
-    {% include item/breadcrumbs.html %}
-    <div class="my-0 h5 small">{{ page.display_template | replace: "_", " " | upcase }} {% if page.display_template == "compound_object" or page.display_template == "multiple" %}{% assign children = site.data[site.metadata] | where_exp: 'item','item.parentid == page.objectid' %} ({{ children | size }} Items){% endif %}</div>
-    <h2 class="mb-3">{{ page.title }} 
-        {% unless page.display_template == 'record' %}<a href="#metadata" class="ms-5 btn btn-sm btn-outline-dark small">Item Info 
-            <svg class="bi icon-sprite" role="img" aria-label="Jump to Item Info">
-                <use href="{{ '/assets/css/cb-icons.svg' | relative_url }}#arrow-down"/>
-            </svg>
-        </a>{% endunless %}
-    </h2>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="text-dark" href="{{ '/' | relative_url }}">Home</a></li>
+            <li class="breadcrumb-item"><a class="text-dark" href="{{ '/browse.html' | relative_url }}">Browse</a></li>
+            <li class="breadcrumb-item active text-dark" aria-current="page">{{ headword | default: page.title | truncatewords: 10 }}</li>
+        </ol>
+    </nav>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10">
+        <div class="col-12 col-md-10 col-lg-8">
 
-        {{ content }}
+            <!-- Headword, English gloss, IPA -->
+            <h1 class="entry-headword">{{ headword | default: page.title }}</h1>
+            <p class="entry-gloss">
+                {%- if headword %}{{ page.title }}{% endif -%}
+                {%- if page.ipa and page.cont_ortho_tone == nil and page.comp_ortho_tone == nil and page.pot_ortho_tone == nil %}<span class="entry-ipa">{{ page.ipa }}</span>{% endif -%}
+            </p>
 
-        </div>
+            <!-- Verb forms (entries that merge completive / continuative / potential) -->
+            {% if page.comp_ortho_tone or page.cont_ortho_tone or page.pot_ortho_tone %}
+            {%- assign aspect_list = "comp|Completive,cont|Continuative,pot|Potential" | split: "," -%}
+            <div class="card mb-4 forms-card">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Forms</h2>
+                    {% for a in aspect_list %}
+                    {%- assign parts = a | split: "|" -%}
+                    {%- assign pre = parts[0] -%}
+                    {%- assign f_word = pre | append: "_ortho_tone" -%}
+                    {%- assign f_ipa = pre | append: "_ipa" -%}
+                    {%- assign f_audio = pre | append: "_audio" -%}
+                    {%- assign f_spk = pre | append: "_speaker" -%}
+                    {%- assign f_note = pre | append: "_notes" -%}
+                    {% if page[f_word] %}
+                    <div class="form-row">
+                        <div class="form-aspect">{{ parts[1] }}</div>
+                        <div class="form-word">
+                            <span class="form-headword">{{ page[f_word] }}</span>
+                            {% if page[f_ipa] %}<span class="entry-ipa">{{ page[f_ipa] }}</span>{% endif %}
+                            {% if page[f_spk] %}<span class="form-meta">speaker {{ page[f_spk] }}</span>{% endif %}
+                            {% if page[f_note] %}<div class="form-meta">{{ page[f_note] }}</div>{% endif %}
+                        </div>
+                        <div class="form-audio">
+                            {% if page[f_audio] %}
+                            <audio controls preload="none" class="w-100"><source src="{{ page[f_audio] | relative_url }}"></audio>
+                            {% else %}
+                            <span class="text-muted fst-italic small">no recording yet</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
 
-        <div class="col-12 col-md-10" id="metadata">
+            <!-- Recording (single-form entries) -->
+            {% elsif page.display_template == 'audio' and page.object_location %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    {% include item/audio-player.html %}
+                    <p class="small mb-0 mt-2 text-end">
+                        <a class="text-secondary" href="{{ page.object_location | relative_url }}" download>Download recording ({{ page.format | split: '/' | last | upcase }})</a>
+                    </p>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted fst-italic mb-4">No recording is available for this entry yet.</p>
+            {% endif %}
 
-            {% include item/metadata.html %}
+            <!-- Details -->
+            <div class="card mb-4" id="metadata">
+                <div class="card-body">
+                    {% include item/metadata.html %}
+                </div>
+            </div>
 
-        </div>
-
-        <div class="col-md-5 py-4">
             {% include item/citation-box.html %}
+
+            {% if page.rights or page.rightsstatement %}
+            <div class="py-3">{% include item/rights-box.html %}</div>
+            {% endif %}
+
         </div>
-        {% if page.rights or page.rightsstatement %}
-        <div class="col-md-5 py-4">
-            {% include item/rights-box.html %}
-        </div>
-        {% endif %}
     </div>
 
     {%- if site.data.theme.browse-buttons == true -%}
