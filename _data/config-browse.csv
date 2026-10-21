@@ -1,7 +1,9 @@
 field,display_name,btn,hidden,sort_name,facet_name
 orthography_tone,Headword,,,Headword,
+orthography,Spelling without tone,,true,,
 ipa,IPA,,true,,
-part_of_speech,Part of Speech,,true,,
-semantic_domain,Semantic Domain,,true,,
+part_of_speech,Part of Speech,,true,,Part of Speech
+semantic_domain,Semantic Domain,,true,,Semantic Domain
 spanish,Spanish Gloss,,true,,
 speaker,Speaker,,true,,Speaker
+display_template,Recording,,true,,Recording
