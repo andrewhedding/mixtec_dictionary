@@ -299,6 +299,11 @@ function isDateInRange(itemDate, startDate, endDate) {
 /**
  * Check if item matches search criteria (handles semicolon-separated values)
  */
+// Ignore case AND accents/tone marks when comparing (ndáa = NDAA = ndaa; mañana = manana)
+function fold(str) {
+    return str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+}
+
 function itemMatches(item, field, query, startDate, endDate) {
     // Date field search
     if (isDateField(field) && (startDate || endDate)) {
@@ -309,12 +314,12 @@ function itemMatches(item, field, query, startDate, endDate) {
     
     // Text search
     if (query && query !== "") {
-        const q = query.trim().toUpperCase();
+        const q = fold(query.trim());
         
         // Search all fields 
         if (field === "all") {
             for (let k in item) {
-                if (k !== "img" && item[k] && item[k].toString().toUpperCase().includes(q)) {
+                if (k !== "img" && k !== "object_location" && item[k] && fold(item[k]).includes(q)) {
                     return true;
                 }
             }
@@ -324,7 +329,7 @@ function itemMatches(item, field, query, startDate, endDate) {
         // Search specific field
         if (item[field]) {
             const fieldValues = item[field].toString().split(";");
-            return fieldValues.some(value => value.trim().toUpperCase().includes(q));
+            return fieldValues.some(value => fold(value.trim()).includes(q));
         }
     }
     
@@ -383,6 +388,32 @@ function advancedFilterItems(arr, searchCriteria) {
     loadingIcon.classList.add("d-none");
 }
 
+// ---- "Show more" paging: draw 100 rows at a time so the page stays fast ----
+const CB_PAGE_SIZE = 100;
+let cbFiltered = [];
+let cbShown = 0;
+
+function cbUpdateShowMore() {
+    let wrap = document.getElementById("cbShowMoreWrap");
+    if (!wrap) {
+        wrap = document.createElement("div");
+        wrap.id = "cbShowMoreWrap";
+        wrap.className = "text-center my-3";
+        browseItemsDiv.insertAdjacentElement("afterend", wrap);
+    }
+    const remaining = cbFiltered.length - cbShown;
+    wrap.innerHTML = remaining > 0
+        ? `<button type="button" class="btn btn-outline-primary" onclick="cbShowMore()">Show ${Math.min(CB_PAGE_SIZE, remaining)} more (${remaining} not yet shown)</button>`
+        : "";
+}
+
+function cbShowMore() {
+    const next = cbFiltered.slice(cbShown, cbShown + CB_PAGE_SIZE);
+    browseItemsDiv.insertAdjacentHTML("beforeend", next.map(item => makeCard(item)).join(''));
+    cbShown += next.length;
+    cbUpdateShowMore();
+}
+
 /**
  * Update the display with filtered results
  */
@@ -392,7 +423,9 @@ function updateDisplay(filteredItems, query = "", field = "", startDate = "", en
     const tempDiv = document.createElement('div');
     
     // Generate all cards at once
-    const cardsHTML = filteredItems.map(item => makeCard(item)).join('');
+    cbFiltered = filteredItems;
+    cbShown = Math.min(CB_PAGE_SIZE, filteredItems.length);
+    const cardsHTML = filteredItems.slice(0, cbShown).map(item => makeCard(item)).join('');
     tempDiv.innerHTML = cardsHTML;
     
     // Move all cards to fragment
@@ -404,6 +437,8 @@ function updateDisplay(filteredItems, query = "", field = "", startDate = "", en
     browseItemsDiv.innerHTML = '';
     browseItemsDiv.appendChild(fragment);
     
+    cbUpdateShowMore();
+
     // Update count
     document.querySelector("#numberOf").innerHTML = `${filteredItems.length} of {{ items | size }} items`;
     
@@ -846,8 +881,8 @@ function sorting(jsonObject, keyToSortBy) {
     jsonObject.sort((a, b) => {
         let x = a[keyToSortBy];
         let y = b[keyToSortBy];
-        if (typeof x === 'string') x = x.toUpperCase();
-        if (typeof y === 'string') y = y.toUpperCase();
+        if (typeof x === 'string') x = fold(x);
+        if (typeof y === 'string') y = fold(y);
         return (x == null) ? 1 : (y == null) ? -1 : (x < y) ? -1 : (x > y) ? 1 : 0;
     });
 }

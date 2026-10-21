@@ -104,3 +104,26 @@
     z-index: 2; // sits above the stretched-link so it stays independently clickable
   }
 }
+
+
+/* ---- Browse rows v5: dictionary look ---- */
+#browseItems {
+  /* the only visible field is the headword, so drop its "Headword:" label */
+  .card-text strong { display: none; }
+
+  /* Mixtec headword: larger, colored; English gloss stays bold */
+  .card-text:not(:has(small)) {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #1a4d8f;
+  }
+
+  /* make it obvious the whole row is clickable */
+  .card { transition: background-color .15s, border-color .15s; }
+  .card:hover { background-color: #f1f6fb; border-color: #8fb0d6; }
+
+  /* tidy wrapping on phones */
+  @media (max-width: 576px) {
+    .card-body { gap: 0.4rem; padding: 0.5rem 0.75rem; }
+  }
+}
